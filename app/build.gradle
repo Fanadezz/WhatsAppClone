@@ -25,6 +25,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+     buildFeatures {
+             //for data binding - default is false
+             dataBinding = true
+
+             //for vieBinding - default is true
+             viewBinding = true
+         }
 }
 
 dependencies {
