@@ -14,7 +14,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+//ensure that you only get translations relevant to your app
+        resConfigs "en"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -60,6 +61,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.4.0'
     implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation 'com.google.firebase:firebase-firestore:21.4.2'
+    implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
 
     //places Lib
     implementation 'com.google.android.libraries.places:places:2.4.0'
