@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.androidshowtime.whatsappclone.databinding.FragmentLoginBinding
 
 
 class LoginFragment : Fragment() {
@@ -14,8 +15,13 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+
+
+        //create binding
+        val binding = FragmentLoginBinding.inflate(inflater)
+
+
+        return binding.root
     }
 
 
