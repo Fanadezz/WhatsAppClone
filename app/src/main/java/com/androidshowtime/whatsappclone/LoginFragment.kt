@@ -17,31 +17,24 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 
 
-class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
-//vars
+class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
+    //vars
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentLoginBinding
 
-    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+    private val startForResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
 
 
+                if (result.resultCode == Activity.RESULT_OK) {
+                    // val intent = result.intent
+                    // Handle the Intent
 
 
-
-        if (result.resultCode == Activity.RESULT_OK) {
-           // val intent = result.intent
-            // Handle the Intent
+                }
 
 
-
-
-        }
-
-
-
-
-
-    }
+            }
 
 
     override fun onCreateView(
@@ -52,7 +45,7 @@ class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
         auth = FirebaseAuth.getInstance()
 
         //create binding
-    binding = FragmentLoginBinding.inflate(inflater)
+        binding = FragmentLoginBinding.inflate(inflater)
 
 
         //check whether a user is already signed in from a previous session
@@ -78,11 +71,8 @@ class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
                     .build()
 
 
-
-
             //val providers = arrayListOf(AuthUI.IdpConfig.PhoneBuilder().build())
             val providers = arrayListOf(phoneConfigWithWhitelistedCountries)
-
 
 
             val intent = AuthUI.getInstance()
@@ -93,7 +83,6 @@ class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
                     .build()
 
             startForResult.launch(intent)
-
 
 
         }
@@ -125,30 +114,40 @@ class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
     }
 
 
-    override fun onStart() {
-        super.onStart()
-
-        auth.addAuthStateListener(this)
-    }
-
     override fun onStop() {
         super.onStop()
 
+        /*FirebaseUI performs auth operations internally which may trigger the
+        listener before the flow is complete.*/
+
+        //unregister AuthStateListener before launching the FirebaseUI flow
         auth.removeAuthStateListener(this)
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        //register AuthStateListener after the flow returns.
+        auth.addAuthStateListener(this)
+    }
+
+    //FirebaseAuth.AuthStateListener
     override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-
-
+        //signing in successful
         if (firebaseAuth.currentUser != null) {
 
-findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToChatFragment())
+            //navigate to second activity/fragement
+            findNavController().navigate(LoginFragmentDirections.
+            actionLoginFragmentToChatFragment())
 
-        }else{
-
-            Snackbar.make(binding.root, resources.getString(R.string.login_failed), Snackbar.LENGTH_SHORT).show()
         }
+        //signed off
+        else {
 
+            Snackbar.make(binding.root,
+                    resources.getString(R.string.login_failed),
+                    Snackbar.LENGTH_SHORT).show()
+        }
 
     }
 

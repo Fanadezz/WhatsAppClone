@@ -12,9 +12,9 @@ class ChatFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+                             ): View? {
         val binding = FragmentChatBinding.inflate(inflater)
 
         //show menu
@@ -31,9 +31,11 @@ class ChatFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         return when (item.itemId) {
-//Log out
+            //Log out
             R.id.log_out -> {
                 FirebaseAuth.getInstance().signOut()
+
+                //navigate back to login fragment
                 findNavController().navigate(ChatFragmentDirections.actionChatFragmentToLoginFragment())
                 true
             }
