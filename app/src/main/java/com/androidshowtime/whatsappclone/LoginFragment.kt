@@ -52,11 +52,11 @@ class LoginFragment : Fragment() {
                 AuthUI.IdpConfig.TwitterBuilder().build())
 
 
-        //create and launch sign-in intent
+        /*//create and launch sign-in intent
         ActivityResultContracts.StartActivityForResult(AuthUI.getInstance()
                                                                .createSignInIntentBuilder()
                                                                .setAvailableProviders(providers)
-                                                               .build(), 12)
+                                                               .build(), 12)*/
 
 
     }
