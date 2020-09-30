@@ -8,16 +8,19 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.androidshowtime.whatsappclone.databinding.FragmentLoginBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.AuthUI.IdpConfig
 import com.firebase.ui.auth.AuthUI.IdpConfig.PhoneBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 
 
 class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
-
+//vars
     private lateinit var auth: FirebaseAuth
+    private lateinit var binding: FragmentLoginBinding
 
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
 
@@ -49,7 +52,7 @@ class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
         auth = FirebaseAuth.getInstance()
 
         //create binding
-        val binding = FragmentLoginBinding.inflate(inflater)
+    binding = FragmentLoginBinding.inflate(inflater)
 
 
         //check whether a user is already signed in from a previous session
@@ -135,7 +138,18 @@ class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
     }
 
     override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-        TODO("Not yet implemented")
+
+
+        if (firebaseAuth.currentUser != null) {
+
+findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToChatFragment())
+
+        }else{
+
+            Snackbar.make(binding.root, resources.getString(R.string.login_failed), Snackbar.LENGTH_SHORT).show()
+        }
+
+
     }
 
 
