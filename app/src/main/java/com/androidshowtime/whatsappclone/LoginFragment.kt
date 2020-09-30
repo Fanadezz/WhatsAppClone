@@ -15,7 +15,9 @@ import com.firebase.ui.auth.AuthUI.IdpConfig.PhoneBuilder
 import com.google.firebase.auth.FirebaseAuth
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(),FirebaseAuth.AuthStateListener {
+
+    private lateinit var auth: FirebaseAuth
 
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
 
@@ -38,7 +40,7 @@ class LoginFragment : Fragment() {
 
     }
 
-    private lateinit var auth: FirebaseAuth
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -117,6 +119,23 @@ class LoginFragment : Fragment() {
                                                                .build(), 12)*/
 
 
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+
+        auth.addAuthStateListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        auth.removeAuthStateListener(this)
+    }
+
+    override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
+        TODO("Not yet implemented")
     }
 
 
