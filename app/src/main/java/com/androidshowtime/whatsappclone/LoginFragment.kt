@@ -15,6 +15,7 @@ import com.firebase.ui.auth.AuthUI.IdpConfig
 import com.firebase.ui.auth.AuthUI.IdpConfig.PhoneBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import timber.log.Timber
 
 
 class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
@@ -78,6 +79,7 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
             val intent = AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(providers)
+                    .setIsSmartLockEnabled(true)
                     .setTosAndPrivacyPolicyUrls("https://example.com", "https://example.com")
                     .setAlwaysShowSignInMethodScreen(true)
                     .build()
@@ -136,20 +138,35 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
         //signing in successful
         if (firebaseAuth.currentUser != null) {
 
-            //navigate to second activity/fragement
-            findNavController().navigate(LoginFragmentDirections.
-            actionLoginFragmentToChatFragment())
+
+            firebaseAuth.currentUser!!.getIdToken(true).addOnSuccessListener {
+
+                Timber.i("The token is: ${it.token}")
+            }.addOnFailureListener {
+                Timber.i("Error - Could not get the token $it")
+
+            }
+
+           // navigate to second activity/fragment
+                    findNavController().navigate(LoginFragmentDirections.
+                    actionLoginFragmentToChatFragment())
 
         }
         //signed off
         else {
 
-            Snackbar.make(binding.root,
+            Snackbar.make(
+                    binding.root,
                     resources.getString(R.string.login_failed),
                     Snackbar.LENGTH_SHORT).show()
         }
 
     }
 
+
+    /* //navigate to second activity/fragment
+                findNavController().navigate(LoginFragmentDirections.
+                actionLoginFragmentToChatFragment())
+    */
 
 }
