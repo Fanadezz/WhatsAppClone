@@ -3,7 +3,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_button_text">Register / Login</string>
     <string name="login_failed">Sign In Failed</string>
-    <string name="log_out">Log Out</string>
 
+    <string name="log_out">Log Out</string>
+    <string name="facebook_application_id" translatable="false">947887709039883</string>
+    <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">fb947887709039883</string>
 
 </resources>

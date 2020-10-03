@@ -10,25 +10,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.androidshowtime.whatsappclone.databinding.FragmentLoginBinding
-import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.AuthUI.IdpConfig
-import com.firebase.ui.auth.AuthUI.IdpConfig.PhoneBuilder
-import com.google.android.material.snackbar.Snackbar
+import com.firebase.ui.auth.AuthUI.getInstance
 import com.google.firebase.auth.FirebaseAuth
-import timber.log.Timber
 
 
 class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
     //vars
     private lateinit var auth: FirebaseAuth
-    private lateinit var binding: FragmentLoginBinding
+
 
     private val startForResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            registerForActivityResult(
+                    ActivityResultContracts
+                            .StartActivityForResult()
+                                     ) { result: ActivityResult ->
 
 
                 if (result.resultCode == Activity.RESULT_OK) {
-                    // val intent = result.intent
                     // Handle the Intent
 
 
@@ -37,7 +36,7 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
 
             }
 
-
+    private lateinit var binding: FragmentLoginBinding
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -49,42 +48,64 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
         binding = FragmentLoginBinding.inflate(inflater)
 
 
-        //check whether a user is already signed in from a previous session
-        if (auth.currentUser != null) {
-            //already signed in
-
-        }
-        else {
-
-            //not signed in
-        }
-
         //login Button implementation
 
         binding.loginButton.setOnClickListener {
+            //check whether a user is already signed in from a previous session
+            if (auth.currentUser != null) {
+                //already signed in
+                // navigate to second activity/fragment
+                findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToChatFragment()
+                                            )
 
-            val whitelistedCountries: MutableList<String> = ArrayList()
-            whitelistedCountries.add("+254")
+            }
+
+            //not signed in
+            else {
 
 
-            val phoneConfigWithWhitelistedCountries = PhoneBuilder()
-                    .setWhitelistedCountries(whitelistedCountries)
-                    .build()
+//set up default number
+                val phoneConfigWithDefaultNumber =
+                        IdpConfig.PhoneBuilder()
+                                .setDefaultNumber("+2547234458")
+                                .build()
 
 
-            //val providers = arrayListOf(AuthUI.IdpConfig.PhoneBuilder().build())
-            val providers = arrayListOf(phoneConfigWithWhitelistedCountries)
+                val providers = arrayListOf(phoneConfigWithDefaultNumber)
+
+                val intent = getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setTosAndPrivacyPolicyUrls(
+                                "https://example.com",
+                                "https://example.com")
+                        .build()
+
+                /*kick off the FirebaseUI sign in flow, call startActivityForResult()
+                          on the sign in Intent you built */
+                startForResult.launch(intent)
+            }
 
 
-            val intent = AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .setIsSmartLockEnabled(true)
-                    .setTosAndPrivacyPolicyUrls("https://example.com", "https://example.com")
-                    .setAlwaysShowSignInMethodScreen(true)
-                    .build()
+            /* val whitelistedCountries = mutableListOf<String>()
+                whitelistedCountries.add("+254")
 
-            startForResult.launch(intent)
+
+
+                val phoneConfigWithWhitelistedCountries = PhoneBuilder()
+                        .setWhitelistedCountries(whitelistedCountries)
+                        .build()
+
+
+                //val providers = arrayListOf(AuthUI.IdpConfig.PhoneBuilder().build())
+                val providers = arrayListOf(phoneConfigWithWhitelistedCountries)
+*/
+
+            /* .setAvailableProviders(providers)
+                                    .setIsSmartLockEnabled(true)
+                                    .setTosAndPrivacyPolicyUrls("https://example.com", "https://example.com")
+                                    .setAlwaysShowSignInMethodScreen(true)*/
 
 
         }
@@ -101,9 +122,10 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
 
         //choose Authentication providers
         val providers = arrayListOf(
-                AuthUI.IdpConfig.PhoneBuilder().build(),
-                AuthUI.IdpConfig.EmailBuilder().build(),
-                AuthUI.IdpConfig.TwitterBuilder().build())
+                IdpConfig.PhoneBuilder().build(),
+                IdpConfig.EmailBuilder().build(),
+                IdpConfig.TwitterBuilder().build()
+                                   )
 
 
         /*//create and launch sign-in intent
@@ -135,30 +157,18 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
 
     //FirebaseAuth.AuthStateListener
     override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-        //signing in successful
+        //user current signed in
         if (firebaseAuth.currentUser != null) {
 
-
-            firebaseAuth.currentUser!!.getIdToken(true).addOnSuccessListener {
-
-                Timber.i("The token is: ${it.token}")
-            }.addOnFailureListener {
-                Timber.i("Error - Could not get the token $it")
-
-            }
-
-           // navigate to second activity/fragment
-                    findNavController().navigate(LoginFragmentDirections.
-                    actionLoginFragmentToChatFragment())
-
+            // navigate to second activity/fragment
+            findNavController().navigate(
+                    LoginFragmentDirections.actionLoginFragmentToChatFragment()
+                                        )
         }
-        //signed off
+        //If user is not signed in then start sign-in process here
         else {
 
-            Snackbar.make(
-                    binding.root,
-                    resources.getString(R.string.login_failed),
-                    Snackbar.LENGTH_SHORT).show()
+
         }
 
     }
@@ -168,5 +178,14 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
                 findNavController().navigate(LoginFragmentDirections.
                 actionLoginFragmentToChatFragment())
     */
+
+
+    /*   firebaseAuth.currentUser!!.getIdToken(true).addOnSuccessListener {
+
+                Timber.i("The token is: ${it.token}")
+            }.addOnFailureListener {
+                Timber.i("Error - Could not get the token $it")
+
+            }*/
 
 }

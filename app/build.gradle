@@ -71,6 +71,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.4.2'
     implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
 
+    // Required only if Facebook login support is required
+    // Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94
+    implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
+
+    // Required only if Twitter login support is required
+    // Find the latest Twitter SDK releases here: https://goo.gl/E5wZvQ
+    implementation 'com.twitter.sdk.android:twitter-core:3.0.0'
+
+
     //places Lib
     implementation 'com.google.android.libraries.places:places:2.4.0'
 
