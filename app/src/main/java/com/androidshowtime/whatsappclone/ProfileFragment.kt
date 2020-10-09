@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.androidshowtime.whatsappclone.databinding.FragmentProfileBinding
 
 
 class ProfileFragment : Fragment() {
@@ -16,8 +17,8 @@ class ProfileFragment : Fragment() {
     ): View? {
 
         //create binding
-        val binding = inflater
-        // Inflate the layout for this fragment
+        val binding = FragmentProfileBinding.inflate(inflater)
+        // return root
         return binding.root
     }
 

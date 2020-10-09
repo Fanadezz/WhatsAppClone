@@ -8,8 +8,8 @@
         android:name="com.androidshowtime.whatsappclone.LoginFragment"
         android:label="LoginFragment" >
         <action
-            android:id="@+id/action_loginFragment_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -18,5 +18,16 @@
         <action
             android:id="@+id/action_chatFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.androidshowtime.whatsappclone.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <argument
+            android:name="phoneNumber"
+            app:argType="string" />
     </fragment>
 </navigation>

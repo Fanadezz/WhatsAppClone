@@ -59,9 +59,7 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
                 //already signed in
                 // navigate to second activity/fragment
                 findNavController().navigate(
-                        LoginFragmentDirections.actionLoginFragmentToChatFragment()
-                                            )
-
+                        ProfileFragmentDirections.actionProfileFragmentToChatFragment())
             }
 
             //not signed in
@@ -173,9 +171,7 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
             }
 
             // navigate to second activity/fragment
-            findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToChatFragment()
-                                        )
+
         }
         //If user is not signed in then start sign-in process here
         else {
