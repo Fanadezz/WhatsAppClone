@@ -25,6 +25,9 @@ class ProfileFragment : Fragment() {
         //set title
         (activity as AppCompatActivity).supportActionBar?.title = "My Profile"
 
+        //set phone number
+        binding.phoneNumberTexView.text = args.phoneNumber
+
         // return root
         return binding.root
     }
