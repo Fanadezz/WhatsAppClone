@@ -57,9 +57,13 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
             //check whether a user is already signed in from a previous session
             if (auth.currentUser != null) {
                 //already signed in
+
+                //get phone number
+
+             val phoneNumber = auth.currentUser?.phoneNumber
                 // navigate to second activity/fragment
                 findNavController().navigate(
-                        ProfileFragmentDirections.actionProfileFragmentToChatFragment())
+                        LoginFragmentDirections.actionLoginFragmentToProfileFragment(phoneNumber!!))
             }
 
             //not signed in
