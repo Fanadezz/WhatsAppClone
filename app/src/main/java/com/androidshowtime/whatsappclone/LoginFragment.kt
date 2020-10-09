@@ -19,6 +19,7 @@ import timber.log.Timber
 class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.IdTokenListener {
     //vars
     private lateinit var auth: FirebaseAuth
+    private lateinit var phoneNumber: String
 
 
     private val startForResult =
@@ -60,10 +61,11 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
 
                 //get phone number
 
-             val phoneNumber = auth.currentUser?.phoneNumber
+                // val phoneNumber = auth.currentUser?.phoneNumber
                 // navigate to second activity/fragment
                 findNavController().navigate(
-                        LoginFragmentDirections.actionLoginFragmentToProfileFragment(phoneNumber!!))
+                        LoginFragmentDirections.actionLoginFragmentToProfileFragment(phoneNumber)
+                                            )
             }
 
             //not signed in
@@ -84,7 +86,8 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
                         .setAvailableProviders(providers)
                         .setTosAndPrivacyPolicyUrls(
                                 "https://example.com",
-                                "https://example.com")
+                                "https://example.com"
+                                                   )
                         .build()
 
                 /*kick off the FirebaseUI sign in flow, call startActivityForResult()
@@ -120,29 +123,6 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
     }
 
 
-    //start signin proces
-
-    fun signin() {
-
-
-        //choose Authentication providers
-        val providers = arrayListOf(
-                IdpConfig.PhoneBuilder().build(),
-                IdpConfig.EmailBuilder().build(),
-                IdpConfig.TwitterBuilder().build()
-                                   )
-
-
-        /*//create and launch sign-in intent
-        ActivityResultContracts.StartActivityForResult(AuthUI.getInstance()
-                                                               .createSignInIntentBuilder()
-                                                               .setAvailableProviders(providers)
-                                                               .build(), 12)*/
-
-
-    }
-
-
     override fun onStop() {
         super.onStop()
 
@@ -162,26 +142,36 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
 
     //FirebaseAuth.AuthStateListener
     override fun onAuthStateChanged(auth: FirebaseAuth) {
+        //current user is signed in
 
-        Timber.i("onAuth state called")
-        //user current signed in
-        if (auth.currentUser != null) {
+        //non-null check/
+        auth.currentUser?.let { currentUser ->
 
-            auth.currentUser?.getIdToken(true)?.addOnSuccessListener {
-                Timber.i("The Token fom onAuth is ${it.token}")
-                Timber.i("The Token fom onAuth is ${auth.currentUser!!.phoneNumber}")
+            //initialize phone number from the current user
+            phoneNumber = currentUser.phoneNumber.toString()
 
+            /*use metadata to check if it is the first time user signs-in*/
+            val metadata = currentUser.metadata!!
+
+            //new user - last login equals creation timestamp
+            if (metadata.creationTimestamp == metadata.lastSignInTimestamp) {
+                //you can navigate to a welcome screen
+                findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToProfileFragment(
+                                phoneNumber))
+            }
+            //existing user
+            else {
+                //if user is existing, move on
+                findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToChatFragment())
 
             }
-
-            // navigate to second activity/fragment
-
         }
+
+
         //If user is not signed in then start sign-in process here
-        else {
 
-
-        }
 
     }
 
