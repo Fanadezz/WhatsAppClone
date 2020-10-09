@@ -13,9 +13,10 @@ import com.androidshowtime.whatsappclone.databinding.FragmentLoginBinding
 import com.firebase.ui.auth.AuthUI.IdpConfig
 import com.firebase.ui.auth.AuthUI.getInstance
 import com.google.firebase.auth.FirebaseAuth
+import timber.log.Timber
 
 
-class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
+class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener ,FirebaseAuth.IdTokenListener {
     //vars
     private lateinit var auth: FirebaseAuth
 
@@ -51,6 +52,8 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
         //login Button implementation
 
         binding.loginButton.setOnClickListener {
+
+            Timber.i("button clicked")
             //check whether a user is already signed in from a previous session
             if (auth.currentUser != null) {
                 //already signed in
@@ -156,9 +159,19 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
     }
 
     //FirebaseAuth.AuthStateListener
-    override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
+    override fun onAuthStateChanged(auth: FirebaseAuth) {
+
+        Timber.i("onAuth state called")
         //user current signed in
-        if (firebaseAuth.currentUser != null) {
+        if (auth.currentUser != null) {
+
+            auth.currentUser?.getIdToken(true)?.addOnSuccessListener {
+                Timber.i("The Token fom onAuth is ${it.token}")
+                Timber.i("The Token fom onAuth is ${auth.currentUser!!.phoneNumber}")
+
+
+
+            }
 
             // navigate to second activity/fragment
             findNavController().navigate(
@@ -173,6 +186,20 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener {
 
     }
 
+    override fun onIdTokenChanged(auth: FirebaseAuth) {
+        Timber.i("onIdToken Called")
+        auth.currentUser?.getIdToken(true)?.addOnSuccessListener {
+            Timber.i("The Token from onIdToken is ${it.token}")
+
+        }
+
+    }
+
+    //Xindy has the cutest smile, hajiskii sukari making her so easy to like.
+
+    //Ako Left-Sided n like other Lefties she is amazing n full of brilliant ideas
+
+    // Cindy is a slice of heaven to me
 
     /* //navigate to second activity/fragment
                 findNavController().navigate(LoginFragmentDirections.
