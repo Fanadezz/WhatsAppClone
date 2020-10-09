@@ -11,5 +11,6 @@
     <string name="phone_number">Your Phone Number</string>
     <string name="enter_your_name">Enter Name</string>
     <string name="enter_your_name_hint">Enter Name Here</string>
+    <string name="ok_buttonz_text">OK</string>
 
 </resources>
