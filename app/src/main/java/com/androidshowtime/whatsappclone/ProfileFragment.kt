@@ -75,7 +75,6 @@ class ProfileFragment : Fragment() {
             .set(user)
             .addOnSuccessListener {
 
-            Toast.makeText(activity, "Detail Saved", Toast.LENGTH_SHORT).show()
         }
 
 

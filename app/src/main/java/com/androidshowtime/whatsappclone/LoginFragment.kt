@@ -166,6 +166,8 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
                 findNavController().navigate(
                         LoginFragmentDirections.actionLoginFragmentToChatFragment())
 
+
+
             }
         }
 
