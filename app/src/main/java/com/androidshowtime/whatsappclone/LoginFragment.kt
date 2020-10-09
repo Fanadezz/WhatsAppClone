@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import timber.log.Timber
 
 
-class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener ,FirebaseAuth.IdTokenListener {
+class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.IdTokenListener {
     //vars
     private lateinit var auth: FirebaseAuth
 
@@ -68,7 +68,7 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener ,FirebaseAuth.I
             else {
 
 
-//set up default number
+                //set up default number
                 val phoneConfigWithDefaultNumber =
                         IdpConfig.PhoneBuilder()
                                 .setDefaultNumber("+2547234458")
@@ -170,7 +170,6 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener ,FirebaseAuth.I
                 Timber.i("The Token fom onAuth is ${auth.currentUser!!.phoneNumber}")
 
 
-
             }
 
             // navigate to second activity/fragment
@@ -201,18 +200,5 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener ,FirebaseAuth.I
 
     // Cindy is a slice of heaven to me
 
-    /* //navigate to second activity/fragment
-                findNavController().navigate(LoginFragmentDirections.
-                actionLoginFragmentToChatFragment())
-    */
-
-
-    /*   firebaseAuth.currentUser!!.getIdToken(true).addOnSuccessListener {
-
-                Timber.i("The token is: ${it.token}")
-            }.addOnFailureListener {
-                Timber.i("Error - Could not get the token $it")
-
-            }*/
 
 }

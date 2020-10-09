@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileFragment">
+
+
+    <TextView
+        android:id="@+id/phoneNumberTexView"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="@+id/nameLabel"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberLabel" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:hint="@string/enter_your_name_hint"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameLabel" />
+
+    <TextView
+        android:id="@+id/phoneNumberLabel"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="216dp"
+        android:text="@string/phone_number"
+        app:layout_constraintStart_toStartOf="@+id/phoneNumberTexView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nameLabel"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/enter_your_name"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberTexView" />
+</androidx.constraintlayout.widget.ConstraintLayout>
