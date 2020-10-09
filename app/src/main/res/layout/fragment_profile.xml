@@ -12,13 +12,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/quantum_lightgreen100"
         tools:context=".ProfileFragment">
 
 
         <TextView
             android:id="@+id/phoneNumberTexView"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
+
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -27,7 +26,6 @@
 
         <EditText
             android:id="@+id/editTextTextPersonName"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
@@ -35,7 +33,6 @@
             android:ems="10"
             android:hint="@string/enter_your_name_hint"
             android:inputType="textPersonName"
-            android:text="Name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nameLabel" />
 
@@ -44,7 +41,7 @@
             style="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="216dp"
+            android:layout_marginTop="100dp"
             android:text="@string/phone_number"
             app:layout_constraintStart_toStartOf="@+id/phoneNumberTexView"
             app:layout_constraintTop_toTopOf="parent" />
