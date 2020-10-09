@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/quantum_lightgreen100"
     tools:context=".ProfileFragment">
 
 
@@ -18,12 +19,12 @@
 
     <EditText
         android:id="@+id/editTextTextPersonName"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="24dp"
         android:ems="10"
-        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:hint="@string/enter_your_name_hint"
         android:inputType="textPersonName"
         android:text="Name"
