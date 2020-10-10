@@ -64,7 +64,7 @@ class MessageFragment : Fragment() {
     fun createMessage() {
 
 
-        val sender = getSenderName()
+        val sender = auth.currentUser?.displayName!!
         val messageString = readMessageBox()
 
         val message = Message(sender, messageString, Date())

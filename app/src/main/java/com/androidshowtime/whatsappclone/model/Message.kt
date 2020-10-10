@@ -4,7 +4,8 @@ import com.google.firebase.firestore.ServerTimestamp
 import java.util.*
 
 data class Message(
-    val sender: String,
+    val from: String,
+    val to:String,
     val messageString: String,
     @ServerTimestamp
     val
