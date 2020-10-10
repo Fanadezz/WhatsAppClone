@@ -25,6 +25,7 @@ class MessageFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var user: User
     private lateinit var binding: FragmentMessageBinding
+    private var sendMessage = false
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -48,54 +49,66 @@ class MessageFragment : Fragment() {
         //send button implementation
         binding.sendButton.setOnClickListener {
 
-            createMessage()
 
-            //clear editext
-            binding.msgBoxEdittext.text.clear()
+
+
+             sendMessage()
+
+                //clear editext
+                binding.msgBoxEdittext.text.clear()
+
+
 
 
         }
         return binding.root
     }
-
-
-    //create message
-
-    fun createMessage() {
-
-
-        val sender = auth.currentUser?.displayName!!
-        val messageString = readMessageBox()
-
-        val message = Message(sender, messageString, Date())
-
-        firestore.collection("Messages").add(message).addOnSuccessListener { }
-
-    }
-
-
     //read Edittext value
     private fun readMessageBox(): String {
-        var msg = ""
+        var messageString = ""
 
         //check if Edittext is Blank
 
         if (binding.msgBoxEdittext.text.toString().isNotBlank()) {
 
-            msg = binding.msgBoxEdittext.text.toString()
+            messageString = binding.msgBoxEdittext.text.toString()
+
         }
         else {
 
 
             Snackbar.make(
-                    binding.root,
-                    resources.getString(R.string.messagebox_hint),
-                    Snackbar.LENGTH_SHORT)
-                    .show()
+                binding.root,
+                resources.getString(R.string.messagebox_hint),
+                Snackbar.LENGTH_SHORT)
+                .show()
         }
 
-        return msg
+        return messageString
 
+    }
+
+
+    //create message
+
+    fun createMessage() : Message{
+
+
+        val from = auth.currentUser?.displayName!!
+        val to = user.name!!
+        val messageString = readMessageBox()
+
+        val message = Message(from, to,messageString, Date())
+
+
+return  message
+    }
+
+
+    fun sendMessage() {
+
+        val message = createMessage()
+        firestore.collection("Messages").add(message).addOnSuccessListener { }
     }
 
 
