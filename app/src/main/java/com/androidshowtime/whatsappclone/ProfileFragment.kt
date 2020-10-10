@@ -11,8 +11,10 @@ import androidx.navigation.fragment.navArgs
 import com.androidshowtime.whatsappclone.databinding.FragmentProfileBinding
 import com.androidshowtime.whatsappclone.model.User
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
+import timber.log.Timber
 
 
 class ProfileFragment : Fragment() {
@@ -23,14 +25,16 @@ class ProfileFragment : Fragment() {
     private lateinit var name: String
     private lateinit var phoneNumber: String
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        //instantiate firestore
+        //initialize firestore and auth
         firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         //create binding
         val binding = FragmentProfileBinding.inflate(inflater)
@@ -49,7 +53,13 @@ class ProfileFragment : Fragment() {
             if (binding.editTextTextPersonName.text.isNotBlank()) {
 
                 name = binding.editTextTextPersonName.text.toString()
+
+                //save user's details to firestore
                 saveUserDetails(phoneNumber, name)
+
+                //update user's profile
+                updateProfileDetails(name)
+
                 findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToChatFragment())
 
             } else {
@@ -70,14 +80,35 @@ class ProfileFragment : Fragment() {
         //create a new user profile
         val user = User(phoneNumber, name)
 
-        //create a firestore reference
+        //create a firestore reference and save contact into firestore
         val ref = firestore.collection("Contacts")
             .document(name)
             .set(user)
             .addOnSuccessListener {
 
+            }
+
+
+    }
+
+
+    fun updateProfileDetails(name: String) {
+
+        val user = auth.currentUser
+
+        //you can update a user's basic profile info with updateProfile()
+        val profileUpdates = userProfileChangeRequest {
+
+
+            displayName = name
+
         }
 
+        user!!.updateProfile(profileUpdates).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Timber.i("Profile Updated")
+            }
+        }
 
     }
 
