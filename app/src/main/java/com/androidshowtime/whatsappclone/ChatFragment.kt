@@ -15,6 +15,7 @@ class ChatFragment : Fragment() {
     //vars
     private lateinit var firestore: FirebaseFirestore
     private lateinit var contactsList: MutableList<User>
+    private lateinit var contactsNames: MutableList<String>
     private lateinit var adapter: ArrayAdapter<String>
 
 
@@ -31,17 +32,25 @@ class ChatFragment : Fragment() {
 
         firestore = FirebaseFirestore.getInstance()
 
-        //initialize list
+        //initialize lists
         contactsList = mutableListOf()
-
+        contactsNames = mutableListOf()
+        //obtain contacts and add them to the lists
+        getAllDocs()
         //initialize adapter
 
-        adapter = ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, contactsList)
+        adapter =
+            ArrayAdapter(requireActivity(), android.R.layout.simple_list_item_1, contactsNames)
 
         //populate listView
-
         binding.listView.adapter = adapter
-getAllDocs()
+
+        //implement list onClick
+        binding.listView.setOnItemClickListener { _, _, i, _ ->
+
+
+        }
+
         return binding.root
     }
 
@@ -74,11 +83,11 @@ getAllDocs()
         firestore.collection("Contacts").get().addOnSuccessListener { querySnapshot ->
             for (doc in querySnapshot) {
 
+                val user = doc.toObject(User::class.java)
 
-                
 
-                /*Timber.i("The doc is ${doc.id}")
-                contactsList.add(doc.id)*/
+                contactsList.add(user)
+                contactsNames.add(user.name!!)
 
             }
             adapter.notifyDataSetChanged()
