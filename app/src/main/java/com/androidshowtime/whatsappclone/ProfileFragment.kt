@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -67,7 +66,7 @@ class ProfileFragment : Fragment() {
     //save user's details in Cloud Firestore
     private fun saveUserDetails(phoneNumber: String, name: String) {
         //create a new user profile
-        val user = UserProfile(phoneNumber, name)
+        val user = User(phoneNumber, name)
 
         //create a firestore reference
         val ref = firestore.collection("Contacts")
