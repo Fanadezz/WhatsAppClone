@@ -12,6 +12,7 @@ import com.androidshowtime.whatsappclone.databinding.FragmentProfileBinding
 import com.androidshowtime.whatsappclone.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 
 
 class ProfileFragment : Fragment() {
