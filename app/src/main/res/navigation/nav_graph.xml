@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph.xml"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
     app:startDestination="@id/loginFragment">
 
     <fragment
@@ -22,6 +24,9 @@
             android:id="@+id/action_chatFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/loginFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_messageFragment"
+            app:destination="@id/messageFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -33,5 +38,14 @@
         <argument
             android:name="phoneNumber"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.androidshowtime.whatsappclone.MessageFragment"
+        android:label="fragment_message"
+        tools:layout="@layout/fragment_message" >
+        <argument
+            android:name="user"
+            app:argType="com.androidshowtime.whatsappclone.model.User" />
     </fragment>
 </navigation>
