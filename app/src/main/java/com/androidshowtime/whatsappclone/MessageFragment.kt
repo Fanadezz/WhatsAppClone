@@ -17,5 +17,5 @@ class MessageFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_message, container, false)
     }
 
-   
+
 }

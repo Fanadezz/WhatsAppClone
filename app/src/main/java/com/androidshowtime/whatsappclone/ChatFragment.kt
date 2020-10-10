@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.androidshowtime.whatsappclone.databinding.FragmentChatBinding
+import com.androidshowtime.whatsappclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
