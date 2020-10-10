@@ -49,6 +49,8 @@ class ChatFragment : Fragment() {
         //implement list onClick
         binding.listView.setOnItemClickListener { _, _, i, _ ->
 
+            findNavController().navigate(ChatFragmentDirections
+                                             .actionChatFragmentToMessageFragment(contactsList[i]))
 
         }
 

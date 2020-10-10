@@ -12,5 +12,6 @@
     <string name="enter_your_name">Enter Name</string>
     <string name="enter_your_name_hint">Enter Name Here</string>
     <string name="ok_buttonz_text">OK</string>
+    <string name="messagebox_hint">Type a Message</string>
 
 </resources>
