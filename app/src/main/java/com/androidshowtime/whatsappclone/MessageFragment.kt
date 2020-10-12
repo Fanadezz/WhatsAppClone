@@ -28,9 +28,9 @@ class MessageFragment : Fragment() {
     private var sendMessage = false
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-                             ): View? {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         //retrieve user from Nav Args
         user = args.user
 
@@ -50,19 +50,16 @@ class MessageFragment : Fragment() {
         binding.sendButton.setOnClickListener {
 
 
+            sendMessage()
 
-
-             sendMessage()
-
-                //clear editext
-                binding.msgBoxEdittext.text.clear()
-
-
+            //clear editext
+            binding.msgBoxEdittext.text.clear()
 
 
         }
         return binding.root
     }
+
     //read Edittext value
     private fun readMessageBox(): String {
         var messageString = ""
@@ -73,14 +70,14 @@ class MessageFragment : Fragment() {
 
             messageString = binding.msgBoxEdittext.text.toString()
 
-        }
-        else {
+        } else {
 
 
             Snackbar.make(
                 binding.root,
                 resources.getString(R.string.messagebox_hint),
-                Snackbar.LENGTH_SHORT)
+                Snackbar.LENGTH_SHORT
+            )
                 .show()
         }
 
@@ -91,45 +88,24 @@ class MessageFragment : Fragment() {
 
     //create message
 
-    fun createMessage() : Message{
+    private fun createMessage(): Message {
 
 
         val from = auth.currentUser?.displayName!!
         val to = user.name!!
         val messageString = readMessageBox()
 
-        val message = Message(from, to,messageString, Date())
+        val message = Message(from, to, messageString, Date())
 
 
-return  message
+        return message
     }
 
 
-    fun sendMessage() {
+    private fun sendMessage() {
 
         val message = createMessage()
         firestore.collection("Messages").add(message).addOnSuccessListener { }
-    }
-
-
-    //get sender's name
-    fun getSenderName(): String {
-       var sender = ""
-        val userPhoneNumber = auth.currentUser?.phoneNumber
-        firestore.collection("Contacts")
-                .whereEqualTo("phoneNumber", userPhoneNumber)
-                .get()
-                .addOnSuccessListener {
-
-                    for (doc in it) {
-
-                        val contact = doc.toObject(User::class.java)
-                        sender = contact.name!!
-                    }
-
-                }
-
-        return sender
     }
 
 
