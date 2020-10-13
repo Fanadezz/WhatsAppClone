@@ -15,6 +15,10 @@ class ChatFragment : Fragment() {
 
     //vars
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth:FirebaseAuth
+
+
+
     private lateinit var contactsList: MutableList<User>
     private lateinit var contactsNames: MutableList<String>
     private lateinit var adapter: ArrayAdapter<String>
@@ -29,15 +33,15 @@ class ChatFragment : Fragment() {
         //show menu
         setHasOptionsMenu(true)
 
-        //initialize firestore
-
+        //initialize firestore and auth
         firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         //initialize lists
         contactsList = mutableListOf()
         contactsNames = mutableListOf()
         //obtain contacts and add them to the lists
-        getAllDocs()
+        getAllContacts()
         //initialize adapter
 
         adapter =
@@ -81,9 +85,14 @@ class ChatFragment : Fragment() {
 
     }
 
-    private fun getAllDocs() {
+    private fun getAllContacts() {
 
-        firestore.collection("Contacts").get().addOnSuccessListener { querySnapshot ->
+
+        val currentUserPhoneCredential = auth.currentUser?.phoneNumber!!
+
+        firestore.collection("Contacts")
+            .where("phoneNumber", "!=", currentUserPhoneCredential)
+            .get().addOnSuccessListener { querySnapshot ->
             for (doc in querySnapshot) {
 
                 val user = doc.toObject(User::class.java)

@@ -92,7 +92,7 @@ class ProfileFragment : Fragment() {
     }
 
 
-    fun updateProfileDetails(name: String) {
+    private fun updateProfileDetails(name: String) {
 
         val user = auth.currentUser
 

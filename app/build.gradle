@@ -81,7 +81,8 @@ dependencies {
     implementation "com.google.firebase:firebase-auth-ktx:19.4.0"
 
     //don't update this dependency
-    implementation 'com.google.firebase:firebase-firestore:21.4.2'
+    //implementation 'com.google.firebase:firebase-firestore:21.4.2'
+    implementation 'com.google.firebase:firebase-firestore:21.7.1'
     implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
 
     // Required only if Facebook login support is required
