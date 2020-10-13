@@ -3,6 +3,7 @@ package com.androidshowtime.whatsappclone
 import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.androidshowtime.whatsappclone.databinding.FragmentChatBinding
@@ -37,6 +38,8 @@ class ChatFragment : Fragment() {
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
+
+        (activity as AppCompatActivity).supportActionBar?.title = "Chats"
         //initialize lists
         contactsList = mutableListOf()
         contactsNames = mutableListOf()
@@ -86,17 +89,14 @@ class ChatFragment : Fragment() {
     }
 
     private fun getAllContacts() {
-
-
         val currentUserPhoneCredential = auth.currentUser?.phoneNumber!!
 
         firestore.collection("Contacts")
-            .where("phoneNumber", "!=", currentUserPhoneCredential)
+            .whereNotEqualTo("phoneNumber", currentUserPhoneCredential)
             .get().addOnSuccessListener { querySnapshot ->
             for (doc in querySnapshot) {
 
                 val user = doc.toObject(User::class.java)
-
 
                 contactsList.add(user)
                 contactsNames.add(user.name!!)

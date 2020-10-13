@@ -108,5 +108,7 @@ class MessageFragment : Fragment() {
         firestore.collection("Messages").add(message).addOnSuccessListener { }
     }
 
+    
+
 
 }
