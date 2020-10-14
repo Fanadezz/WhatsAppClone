@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidshowtime.whatsappclone.databinding.FragmentMessageBinding
 import com.androidshowtime.whatsappclone.model.Message
 import com.androidshowtime.whatsappclone.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import timber.log.Timber
 import java.util.*
 
 
@@ -25,7 +27,13 @@ class MessageFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var user: User
     private lateinit var binding: FragmentMessageBinding
+    private lateinit var messageThreadList: MutableList<Message>
     private var sendMessage = false
+
+    override fun onStart() {
+        super.onStart()
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,16 +42,51 @@ class MessageFragment : Fragment() {
         //retrieve user from Nav Args
         user = args.user
 
-
-        //initialize binding
-        binding = FragmentMessageBinding.inflate(inflater)
-
         //initialize auth and firestore
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
+        //initialize message thread list
+        messageThreadList = mutableListOf()
+//find messages
+        findChats()
+
+        Timber.i("findChats called $messageThreadList")
+        //initialize binding
+        binding = FragmentMessageBinding.inflate(inflater)
+
+
         //set actionBar's title
         (activity as AppCompatActivity).supportActionBar?.title = user.name
+
+
+        Timber.i("checking $messageThreadList")
+        val linearLayout = LinearLayoutManager(activity)
+        val myMessage: MutableList<Message> = mutableListOf()
+        val adapter = RecyclerViewAdapter(myMessage)
+        myMessage.apply {
+            add(Message(
+                from = "Goat",
+                to = "Winnie",
+                messageString = "How are you holding up",
+                Date()
+            ))
+
+            add(Message(
+                from = "Tonnie",
+                to = "me",
+                messageString = "Hi Sugar",
+                Date()
+            ))
+
+
+        }
+
+        adapter.notifyDataSetChanged()
+
+        Timber.i("checking $myMessage")
+        binding.recyclerView.layoutManager = linearLayout
+        binding.recyclerView.adapter = adapter
 
 
         //send button implementation
@@ -108,7 +151,31 @@ class MessageFragment : Fragment() {
         firestore.collection("Messages").add(message).addOnSuccessListener { }
     }
 
-    
 
+    private fun findChats() {
+        val currentUser = auth.currentUser?.displayName!!
+        val user = args.user
+        val msgRef = firestore.collection("Messages")
+
+        msgRef.whereEqualTo("from", user.name).get().addOnSuccessListener {
+
+                querySnapshot ->
+            for (doc in querySnapshot) {
+
+
+                val message = doc.toObject(Message::class.java)
+                messageThreadList.add(message)
+
+                Timber.i("The message are $messageThreadList")
+            }
+
+
+        }.addOnFailureListener {
+
+            Timber.i("Error - $it")
+        }
+
+
+    }
 
 }

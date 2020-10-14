@@ -29,6 +29,8 @@ class ChatFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
                              ): View? {
+
+        val view = inflater.inflate(R.layout.recycler_view_layout,container,false)
         val binding = FragmentChatBinding.inflate(inflater)
 
         //show menu
