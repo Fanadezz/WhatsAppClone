@@ -28,17 +28,15 @@ class MessageFragment : Fragment() {
     private lateinit var user: User
     private lateinit var binding: FragmentMessageBinding
     private lateinit var messageThreadList: MutableList<Message>
+    private lateinit var adapter: RecyclerViewAdapter
     private var sendMessage = false
 
-    override fun onStart() {
-        super.onStart()
-
-    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+                             ): View? {
+
         //retrieve user from Nav Args
         user = args.user
 
@@ -48,7 +46,7 @@ class MessageFragment : Fragment() {
 
         //initialize message thread list
         messageThreadList = mutableListOf()
-//find messages
+        //find messages
         findChats()
 
         Timber.i("findChats called $messageThreadList")
@@ -60,31 +58,15 @@ class MessageFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = user.name
 
 
-        Timber.i("checking $messageThreadList")
+
         val linearLayout = LinearLayoutManager(activity)
-        val myMessage: MutableList<Message> = mutableListOf()
-        val adapter = RecyclerViewAdapter(myMessage)
-        myMessage.apply {
-            add(Message(
-                from = "Goat",
-                to = "Winnie",
-                messageString = "How are you holding up",
-                Date()
-            ))
 
-            add(Message(
-                from = "Tonnie",
-                to = "me",
-                messageString = "Hi Sugar",
-                Date()
-            ))
+       adapter = RecyclerViewAdapter(messageThreadList)
 
 
-        }
 
-        adapter.notifyDataSetChanged()
 
-        Timber.i("checking $myMessage")
+        Timber.i("checking $messageThreadList")
         binding.recyclerView.layoutManager = linearLayout
         binding.recyclerView.adapter = adapter
 
@@ -113,15 +95,16 @@ class MessageFragment : Fragment() {
 
             messageString = binding.msgBoxEdittext.text.toString()
 
-        } else {
+        }
+        else {
 
 
             Snackbar.make(
-                binding.root,
-                resources.getString(R.string.messagebox_hint),
-                Snackbar.LENGTH_SHORT
-            )
-                .show()
+                    binding.root,
+                    resources.getString(R.string.messagebox_hint),
+                    Snackbar.LENGTH_SHORT
+                         )
+                    .show()
         }
 
         return messageString
@@ -138,10 +121,8 @@ class MessageFragment : Fragment() {
         val to = user.name!!
         val messageString = readMessageBox()
 
-        val message = Message(from, to, messageString, Date())
 
-
-        return message
+        return Message(from, to, messageString, Date())
     }
 
 
@@ -159,13 +140,13 @@ class MessageFragment : Fragment() {
 
         msgRef.whereEqualTo("from", user.name).get().addOnSuccessListener {
 
-                querySnapshot ->
+            querySnapshot ->
             for (doc in querySnapshot) {
 
 
                 val message = doc.toObject(Message::class.java)
                 messageThreadList.add(message)
-
+                adapter.notifyDataSetChanged()
                 Timber.i("The message are $messageThreadList")
             }
 
