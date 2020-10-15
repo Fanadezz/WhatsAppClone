@@ -59,7 +59,7 @@ class MessageFragment : Fragment() {
 
 
 
-        val linearLayout = LinearLayoutManager(activity)
+
 
        adapter = RecyclerViewAdapter(messageThreadList)
 
@@ -67,7 +67,7 @@ class MessageFragment : Fragment() {
 
 
         Timber.i("checking $messageThreadList")
-        binding.recyclerView.layoutManager = linearLayout
+
         binding.recyclerView.adapter = adapter
 
 

@@ -20,15 +20,20 @@ class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
     //inflate the recyclerView's row xml layout and return a ViewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderClass {
 
-
         //called a number of times depending on number of rows for initial display n the
         //number of rows needed to manage recycling
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.recycler_view_layout, parent, false)
 
-
+        val view = parent.inflate(R.layout.recycler_view_layout)
         //return an instance of the inner ViewHolderClass
         return ViewHolderClass(itemView)
+    }
+
+    //extension function on ViewGroup class
+    private fun ViewGroup.inflate(layout: Int): View {
+
+        return LayoutInflater.from(context).inflate(layout, this, false)
     }
 
     //bind or maps data to the children
@@ -37,13 +42,15 @@ class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
         //it is called for each row
         val message = messageDataSet[position]
         holder.fromTextView.text = message.from
-        holder.timeStampTextView.text = message.timestamp?.toString("HH:mm a E")
         holder.msgTextView.text = message.messageString
-
+        holder.timeStampTextView.text = message.timestamp?.dateToString("HH:mm a E")
 
     }
-    fun Date.toString(format: String): String {
-        val dateFormatter = SimpleDateFormat(format, Locale.US)
+
+
+//extension function on a date class
+    private fun Date.dateToString(format: String): String {
+        val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
         return dateFormatter.format(this)
     }
 
