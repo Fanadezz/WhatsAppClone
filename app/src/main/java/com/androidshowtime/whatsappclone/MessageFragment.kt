@@ -1,13 +1,13 @@
 package com.androidshowtime.whatsappclone
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidshowtime.whatsappclone.databinding.FragmentMessageBinding
 import com.androidshowtime.whatsappclone.model.Message
 import com.androidshowtime.whatsappclone.model.User
@@ -18,7 +18,7 @@ import timber.log.Timber
 import java.util.*
 
 
-class MessageFragment : Fragment() {
+class MessageFragment : Fragment(), KeyEvent.Callback {
     //vals
     private val args: MessageFragmentArgs by navArgs()
 
@@ -61,14 +61,33 @@ class MessageFragment : Fragment() {
 
 
 
-       adapter = RecyclerViewAdapter(messageThreadList)
+        adapter = RecyclerViewAdapter(messageThreadList)
 
 
 
 
-        Timber.i("checking $messageThreadList")
+
 
         binding.recyclerView.adapter = adapter
+
+        //enable sendButtonClick when enter is hit
+        binding.msgBoxEdittext.setOnKeyListener { v, keyCode, event ->
+
+            when {
+
+                //check if it is the Enter-Key, Check if Enter Key was pressed down
+                ((keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_DOWN)) -> {
+
+
+                    //perform an action here e.g. a send message button click
+                    binding.sendButton.performClick()
+                    return@setOnKeyListener true
+                }
+                else -> false
+            }
+
+
+        }
 
 
         //send button implementation
@@ -129,16 +148,26 @@ class MessageFragment : Fragment() {
     private fun sendMessage() {
 
         val message = createMessage()
-        firestore.collection("Messages").add(message).addOnSuccessListener { }
+        firestore.collection("Messages")
+                .add(message)
+                .addOnSuccessListener { Timber.i("Message sent") }
+                .addOnFailureListener { Timber.i("it") }
+
+        messageThreadList.add(message)
+        adapter.notifyDataSetChanged()
+
     }
 
 
     private fun findChats() {
         val currentUser = auth.currentUser?.displayName!!
-        val user = args.user
+        val chatMate = args.user
         val msgRef = firestore.collection("Messages")
 
-        msgRef.whereEqualTo("from", user.name).get().addOnSuccessListener {
+        msgRef.whereEqualTo("from", chatMate.name).whereEqualTo("to", currentUser)
+
+
+        msgRef.get().addOnSuccessListener {
 
             querySnapshot ->
             for (doc in querySnapshot) {
@@ -157,6 +186,30 @@ class MessageFragment : Fragment() {
         }
 
 
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return when (keyCode) {
+
+            KeyEvent.KEYCODE_ENTER -> {
+                binding.sendButton.performClick()
+                true
+            }
+
+            else -> true
+        }
+    }
+
+    override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun onKeyMultiple(keyCode: Int, count: Int, event: KeyEvent?): Boolean {
+        TODO("Not yet implemented")
     }
 
 }

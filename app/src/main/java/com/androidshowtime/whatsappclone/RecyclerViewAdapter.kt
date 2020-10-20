@@ -1,5 +1,6 @@
 package com.androidshowtime.whatsappclone
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +44,7 @@ class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
         val message = messageDataSet[position]
         holder.fromTextView.text = message.from
         holder.msgTextView.text = message.messageString
-        holder.timeStampTextView.text = message.timestamp?.dateToString("HH:mm a E")
+        holder.timeStampTextView.text = message.timestamp?.dateToString("hh:mm a E dd-MMM")
 
     }
 
