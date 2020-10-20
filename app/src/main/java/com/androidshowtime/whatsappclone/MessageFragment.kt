@@ -19,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_message.*
+import org.intellij.lang.annotations.Flow
 import timber.log.Timber
 import java.util.*
 
@@ -117,26 +118,20 @@ class MessageFragment : Fragment(), TextWatcher {
 
     //read Edittext value
     private fun readMessageBox(): String {
-        var messageString = ""
+       
+
 
         //check if Edittext is Blank
 
-        if (binding.msgBoxEdittext.text.toString().isNotBlank()) {
+        if (binding.msgBoxEdittext.text.toString().isBlank()) {
 
-            messageString = binding.msgBoxEdittext.text.toString()
-
-        }
-        else {
-
-
-            Snackbar.make(
-                    binding.root, resources.getString(R.string.empty_message), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, resources.getString(R.string.empty_message), Snackbar.LENGTH_SHORT).show()
 
 
         }
 
-        return messageString
 
+return  binding.msgBoxEdittext.text.toString()
     }
 
 
@@ -173,9 +168,8 @@ class MessageFragment : Fragment(), TextWatcher {
         val chatMate = args.user
         val msgRef = firestore.collection("Messages")
 
-        msgRef.whereEqualTo("from", chatMate.name).whereEqualTo("to", currentUser)
-
-
+        msgRef.whereEqualTo("from", chatMate.name).whereEqualTo("from", currentUser).whereEqualTo("to", chatMate.name).whereEqualTo("to", currentUser)
+Timber.i("mate is ${chatMate.name}  current user is $currentUser")
         msgRef.get().addOnSuccessListener {
 
             querySnapshot ->
@@ -199,18 +193,15 @@ class MessageFragment : Fragment(), TextWatcher {
 
     }
 
-
-    
-
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-
-    }
-
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         //change button color when text is added
-
         binding.sendButton.background = Color.CYAN.toDrawable()
+        binding.sendButton.scaleX = 0.8f
+        binding.sendButton.scaleY = 0.8f
+
+    }
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
     }
 
     override fun afterTextChanged(s: Editable?) {
