@@ -92,7 +92,8 @@ Timber.i("inside onCreate and Scroll position is ${messageThreadList.size - 1 }"
 
         }
 
-
+        //show cursor on the edittext when texts are loaded
+binding.msgBoxEdittext.requestFocus()
         //send button implementation
         binding.sendButton.setOnClickListener {
 
@@ -204,7 +205,7 @@ Timber.i("inside onCreate and Scroll position is ${messageThreadList.size - 1 }"
 
     fun View.showFocus() {
         val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(this,InputMethodManager.SHOW_IMPLICIT)
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
 
