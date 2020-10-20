@@ -1,11 +1,15 @@
 package com.androidshowtime.whatsappclone
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.androidshowtime.whatsappclone.databinding.FragmentMessageBinding
@@ -14,11 +18,12 @@ import com.androidshowtime.whatsappclone.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.fragment_message.*
 import timber.log.Timber
 import java.util.*
 
 
-class MessageFragment : Fragment() {
+class MessageFragment : Fragment(), TextWatcher {
     //vals
     private val args: MessageFragmentArgs by navArgs()
 
@@ -33,9 +38,7 @@ class MessageFragment : Fragment() {
 
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-                             ): View? {
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //retrieve user from Nav Args
         user = args.user
@@ -93,6 +96,7 @@ class MessageFragment : Fragment() {
 
         //show cursor on the edittext when texts are loaded
         binding.msgBoxEdittext.requestFocus()
+        binding.msgBoxEdittext.addTextChangedListener(this)
         //send button implementation
         binding.sendButton.setOnClickListener {
 
@@ -126,11 +130,7 @@ class MessageFragment : Fragment() {
 
 
             Snackbar.make(
-                    binding.root,
-                    resources.getString(R.string.empty_message),
-                    Snackbar.LENGTH_SHORT
-                         )
-                    .show()
+                    binding.root, resources.getString(R.string.empty_message), Snackbar.LENGTH_SHORT).show()
 
 
         }
@@ -201,6 +201,50 @@ class MessageFragment : Fragment() {
 
 
     fun animateSendButton() {
+        /*binding.msgBoxEdittext.addTextChangedListener { TextViewBindingAdapter.OnTextChanged({ s, start, before, count ->  }) }*/
+
+        msgBoxEdittext.addTextChangedListener(object : TextWatcher {
+
+            /*This method is called to notify you that, within s, the count characters beginning
+            at start have just replaced old text that had length before.*/
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.sendButton.setImageDrawable(R.drawable.send_button.toDrawable())
+            }
+
+            /*This method is called to notify you that, within s, the count characters beginning
+            at start are about to be replaced by new text with length after*/
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            //This method is called to notify you that, somewhere within s, the text has been changed
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+
+    }
+
+    override fun onTextChanged(
+            s: CharSequence?, start: Int, before: Int, count: Int) {
+        //change button color when text is added
+        activateSendButton()
+    }
+
+    override fun afterTextChanged(s: Editable?) {
+        activateSendButton()
+    }
+
+    //make send button active
+    fun activateSendButton() {
+        binding.sendButton.scaleX = 0.8f
+        binding.sendButton.scaleY = 0.8f
+        binding.sendButton.background = Color.CYAN.toDrawable()
+
 
     }
 
