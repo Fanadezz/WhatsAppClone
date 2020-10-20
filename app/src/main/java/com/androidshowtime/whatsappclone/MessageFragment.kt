@@ -200,53 +200,24 @@ class MessageFragment : Fragment(), TextWatcher {
     }
 
 
-    fun animateSendButton() {
-        /*binding.msgBoxEdittext.addTextChangedListener { TextViewBindingAdapter.OnTextChanged({ s, start, before, count ->  }) }*/
-
-        msgBoxEdittext.addTextChangedListener(object : TextWatcher {
-
-            /*This method is called to notify you that, within s, the count characters beginning
-            at start have just replaced old text that had length before.*/
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.sendButton.setImageDrawable(R.drawable.send_button.toDrawable())
-            }
-
-            /*This method is called to notify you that, within s, the count characters beginning
-            at start are about to be replaced by new text with length after*/
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            //This method is called to notify you that, somewhere within s, the text has been changed
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        })
-    }
+    
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
 
     }
 
-    override fun onTextChanged(
-            s: CharSequence?, start: Int, before: Int, count: Int) {
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         //change button color when text is added
-        activateSendButton()
+
+        binding.sendButton.background = Color.CYAN.toDrawable()
     }
 
     override fun afterTextChanged(s: Editable?) {
-        activateSendButton()
-    }
-
-    //make send button active
-    fun activateSendButton() {
-        binding.sendButton.scaleX = 0.8f
-        binding.sendButton.scaleY = 0.8f
-        binding.sendButton.background = Color.CYAN.toDrawable()
-
 
     }
+
+
 
 
 }
