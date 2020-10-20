@@ -15,5 +15,6 @@
     <string name="messagebox_hint">Please Type a Message</string>
     <string name="incoming_msg">=> %s</string>
     <string name="outgoing_msg">=> %s</string>
+    <string name="empty_message"> Cannot send an empty message</string>
 
 </resources>

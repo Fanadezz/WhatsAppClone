@@ -1,10 +1,12 @@
 package com.androidshowtime.whatsappclone
 
+import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
@@ -18,7 +20,7 @@ import timber.log.Timber
 import java.util.*
 
 
-class MessageFragment : Fragment(), KeyEvent.Callback {
+class MessageFragment : Fragment() {
     //vals
     private val args: MessageFragmentArgs by navArgs()
 
@@ -43,16 +45,12 @@ class MessageFragment : Fragment(), KeyEvent.Callback {
         //initialize auth and firestore
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-
+        //initialize binding
+        binding = FragmentMessageBinding.inflate(inflater)
         //initialize message thread list
         messageThreadList = mutableListOf()
         //find messages
         findChats()
-
-        Timber.i("findChats called $messageThreadList")
-        //initialize binding
-        binding = FragmentMessageBinding.inflate(inflater)
-
 
         //set actionBar's title
         (activity as AppCompatActivity).supportActionBar?.title = user.name
@@ -61,31 +59,36 @@ class MessageFragment : Fragment(), KeyEvent.Callback {
 
 
 
+
+
+
+
+//instantiate the RecyclerViewAdapter and pass in the messages list
         adapter = RecyclerViewAdapter(messageThreadList)
 
-
-
-
-
-
+        //set the RecyclerViewAdapter to the recyclerView
         binding.recyclerView.adapter = adapter
 
-        //enable sendButtonClick when enter is hit
+
+Timber.i("inside onCreate and Scroll position is ${messageThreadList.size - 1 }")
+        //enable sendButtonClick when enter button is hit
         binding.msgBoxEdittext.setOnKeyListener { v, keyCode, event ->
 
+            //use when-expression
             when {
-
                 //check if it is the Enter-Key, Check if Enter Key was pressed down
                 ((keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_DOWN)) -> {
 
-
                     //perform an action here e.g. a send message button click
                     binding.sendButton.performClick()
+
+
                     return@setOnKeyListener true
                 }
+
+                //else brance
                 else -> false
             }
-
 
         }
 
@@ -96,12 +99,15 @@ class MessageFragment : Fragment(), KeyEvent.Callback {
             sendMessage()
 
             //make recycler view scroll to show the bottommost text
-            binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
+           binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
+            Timber.i("inside onClick and Scroll position is ${messageThreadList.size - 1 }")
             //clear editext
             binding.msgBoxEdittext.text.clear()
 
 
         }
+
+
         return binding.root
     }
 
@@ -121,10 +127,14 @@ class MessageFragment : Fragment(), KeyEvent.Callback {
 
             Snackbar.make(
                     binding.root,
-                    resources.getString(R.string.messagebox_hint),
+                    resources.getString(R.string.empty_message),
                     Snackbar.LENGTH_SHORT
                          )
                     .show()
+            binding.msgBoxEdittext.showFocus()
+            binding.msgBoxEdittext.isCursorVisible  =true
+
+
         }
 
         return messageString
@@ -176,6 +186,8 @@ class MessageFragment : Fragment(), KeyEvent.Callback {
 
                 val message = doc.toObject(Message::class.java)
                 messageThreadList.add(message)
+                //make recycler view scroll to show the last text message
+                binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
                 adapter.notifyDataSetChanged()
                 Timber.i("The message are $messageThreadList")
             }
@@ -189,28 +201,11 @@ class MessageFragment : Fragment(), KeyEvent.Callback {
 
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return when (keyCode) {
 
-            KeyEvent.KEYCODE_ENTER -> {
-                binding.sendButton.performClick()
-                true
-            }
-
-            else -> true
-        }
+    fun View.showFocus() {
+        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(this,InputMethodManager.SHOW_IMPLICIT)
     }
 
-    override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun onKeyMultiple(keyCode: Int, count: Int, event: KeyEvent?): Boolean {
-        TODO("Not yet implemented")
-    }
 
 }
