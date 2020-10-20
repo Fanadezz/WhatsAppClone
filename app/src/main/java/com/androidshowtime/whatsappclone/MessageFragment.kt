@@ -93,9 +93,10 @@ class MessageFragment : Fragment(), KeyEvent.Callback {
         //send button implementation
         binding.sendButton.setOnClickListener {
 
-
             sendMessage()
 
+            //make recycler view scroll to show the bottommost text
+            binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
             //clear editext
             binding.msgBoxEdittext.text.clear()
 
