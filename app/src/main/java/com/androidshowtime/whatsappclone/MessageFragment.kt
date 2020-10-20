@@ -1,12 +1,10 @@
 package com.androidshowtime.whatsappclone
 
-import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
@@ -56,21 +54,14 @@ class MessageFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = user.name
 
 
-
-
-
-
-
-
-
-//instantiate the RecyclerViewAdapter and pass in the messages list
+        //instantiate the RecyclerViewAdapter and pass in the messages list
         adapter = RecyclerViewAdapter(messageThreadList)
 
         //set the RecyclerViewAdapter to the recyclerView
         binding.recyclerView.adapter = adapter
 
 
-Timber.i("inside onCreate and Scroll position is ${messageThreadList.size - 1 }")
+        Timber.i("inside onCreate and Scroll position is ${messageThreadList.size - 1}")
         //enable sendButtonClick when enter button is hit
         binding.msgBoxEdittext.setOnKeyListener { v, keyCode, event ->
 
@@ -81,9 +72,17 @@ Timber.i("inside onCreate and Scroll position is ${messageThreadList.size - 1 }"
 
                     //perform an action here e.g. a send message button click
                     binding.sendButton.performClick()
-
+                    binding.msgBoxEdittext.requestFocus()
 
                     return@setOnKeyListener true
+                }
+
+                ((keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_UP)) -> {
+
+                    //request for focus when enter button is released
+                    binding.msgBoxEdittext.requestFocus()
+                    return@setOnKeyListener true
+
                 }
 
                 //else brance
@@ -93,15 +92,15 @@ Timber.i("inside onCreate and Scroll position is ${messageThreadList.size - 1 }"
         }
 
         //show cursor on the edittext when texts are loaded
-binding.msgBoxEdittext.requestFocus()
+        binding.msgBoxEdittext.requestFocus()
         //send button implementation
         binding.sendButton.setOnClickListener {
 
             sendMessage()
 
             //make recycler view scroll to show the bottommost text
-           binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
-            Timber.i("inside onClick and Scroll position is ${messageThreadList.size - 1 }")
+            binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
+            Timber.i("inside onClick and Scroll position is ${messageThreadList.size - 1}")
             //clear editext
             binding.msgBoxEdittext.text.clear()
 
@@ -132,8 +131,6 @@ binding.msgBoxEdittext.requestFocus()
                     Snackbar.LENGTH_SHORT
                          )
                     .show()
-            binding.msgBoxEdittext.showFocus()
-            binding.msgBoxEdittext.isCursorVisible  =true
 
 
         }
@@ -203,9 +200,8 @@ binding.msgBoxEdittext.requestFocus()
     }
 
 
-    fun View.showFocus() {
-        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    fun animateSendButton() {
+
     }
 
 
