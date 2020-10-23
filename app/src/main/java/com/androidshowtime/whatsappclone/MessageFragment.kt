@@ -19,7 +19,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import dagger.multibindings.ElementsIntoSet
 import timber.log.Timber
 import java.util.*
 
@@ -118,11 +117,8 @@ class MessageFragment : Fragment(), TextWatcher {
     //read Edittext value
     private fun readMessageBox(): String {
 
-        val messageString  =binding.msgBoxEdittext.text.toString()
 
-
-
-        return messageString
+        return binding.msgBoxEdittext.text.toString()
     }
 
 
@@ -143,26 +139,27 @@ class MessageFragment : Fragment(), TextWatcher {
     private fun sendMessage() {
 
         val message = createMessage()
-
+        //check if the message is empty
         val messageString = message.messageString
 
-        //check if the message is empty
-        if (messageString== ""){
+
+        if (messageString == "") {
 
 
-                Snackbar.make(binding.root, resources.getString(R.string.empty_message), Snackbar.LENGTH_SHORT).show()
-Timber.i("Inside the if-bock")
+            Snackbar.make(binding.root, resources.getString(R.string.empty_message), Snackbar.LENGTH_SHORT).show()
+
 
 
         }
-        else{
-        firestore.collection("Messages")
-                .add(message)
-                .addOnSuccessListener { Timber.i("Message sent") }
-                .addOnFailureListener { Timber.i("it") }
+        else {
+            firestore.collection("Messages")
+                    .add(message)
+                    .addOnSuccessListener { Timber.i("Message sent") }
+                    .addOnFailureListener { Timber.i("it") }
 
-        messageThreadList.add(message)
-        adapter.notifyDataSetChanged()}
+            messageThreadList.add(message)
+            adapter.notifyDataSetChanged()
+        }
 
     }
 
@@ -171,19 +168,19 @@ Timber.i("Inside the if-bock")
         val currentUser = auth.currentUser?.displayName!!
         val chatMate = args.user
         val msgRef = firestore.collection("Messages")
-
+        Timber.i("The guy is: $chatMate")
         msgRef.whereEqualTo("from", chatMate.name)
-                .whereEqualTo("from", currentUser)
+              /*  .whereEqualTo("from", currentUser)
                 .whereEqualTo("to", chatMate.name)
-                .whereEqualTo("to", currentUser)
+                .whereEqualTo("to", currentUser)*/
 
 
-        msgRef.orderBy("t0", Query.Direction.DESCENDING).limit(5)
-             msgRef.get().addOnSuccessListener {
+       // msgRef.orderBy("t0", Query.Direction.DESCENDING).limit(5)
+        .get().addOnSuccessListener {
 
             querySnapshot ->
             for (doc in querySnapshot) {
-//  .orderBy("timestamp")
+                //  .orderBy("timestamp")
 
                 val message = doc.toObject(Message::class.java)
                 messageThreadList.add(message)
