@@ -18,8 +18,8 @@ import com.androidshowtime.whatsappclone.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_message.*
-import org.intellij.lang.annotations.Flow
+import com.google.firebase.firestore.Query
+import dagger.multibindings.ElementsIntoSet
 import timber.log.Timber
 import java.util.*
 
@@ -65,7 +65,6 @@ class MessageFragment : Fragment(), TextWatcher {
         binding.recyclerView.adapter = adapter
 
 
-        Timber.i("inside onCreate and Scroll position is ${messageThreadList.size - 1}")
         //enable sendButtonClick when enter button is hit
         binding.msgBoxEdittext.setOnKeyListener { v, keyCode, event ->
 
@@ -89,7 +88,7 @@ class MessageFragment : Fragment(), TextWatcher {
 
                 }
 
-                //else brance
+                //else branch
                 else -> false
             }
 
@@ -105,7 +104,7 @@ class MessageFragment : Fragment(), TextWatcher {
 
             //make recycler view scroll to show the bottommost text
             binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
-            Timber.i("inside onClick and Scroll position is ${messageThreadList.size - 1}")
+
             //clear editext
             binding.msgBoxEdittext.text.clear()
 
@@ -118,20 +117,12 @@ class MessageFragment : Fragment(), TextWatcher {
 
     //read Edittext value
     private fun readMessageBox(): String {
-       
+
+        val messageString  =binding.msgBoxEdittext.text.toString()
 
 
-        //check if Edittext is Blank
 
-        if (binding.msgBoxEdittext.text.toString().isBlank()) {
-
-            Snackbar.make(binding.root, resources.getString(R.string.empty_message), Snackbar.LENGTH_SHORT).show()
-
-
-        }
-
-
-return  binding.msgBoxEdittext.text.toString()
+        return messageString
     }
 
 
@@ -152,13 +143,26 @@ return  binding.msgBoxEdittext.text.toString()
     private fun sendMessage() {
 
         val message = createMessage()
+
+        val messageString = message.messageString
+
+        //check if the message is empty
+        if (messageString== ""){
+
+
+                Snackbar.make(binding.root, resources.getString(R.string.empty_message), Snackbar.LENGTH_SHORT).show()
+Timber.i("Inside the if-bock")
+
+
+        }
+        else{
         firestore.collection("Messages")
                 .add(message)
                 .addOnSuccessListener { Timber.i("Message sent") }
                 .addOnFailureListener { Timber.i("it") }
 
         messageThreadList.add(message)
-        adapter.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()}
 
     }
 
@@ -168,20 +172,25 @@ return  binding.msgBoxEdittext.text.toString()
         val chatMate = args.user
         val msgRef = firestore.collection("Messages")
 
-        msgRef.whereEqualTo("from", chatMate.name).whereEqualTo("from", currentUser).whereEqualTo("to", chatMate.name).whereEqualTo("to", currentUser)
-Timber.i("mate is ${chatMate.name}  current user is $currentUser")
-        msgRef.get().addOnSuccessListener {
+        msgRef.whereEqualTo("from", chatMate.name)
+                .whereEqualTo("from", currentUser)
+                .whereEqualTo("to", chatMate.name)
+                .whereEqualTo("to", currentUser)
+
+
+        msgRef.orderBy("t0", Query.Direction.DESCENDING).limit(5)
+             msgRef.get().addOnSuccessListener {
 
             querySnapshot ->
             for (doc in querySnapshot) {
-
+//  .orderBy("timestamp")
 
                 val message = doc.toObject(Message::class.java)
                 messageThreadList.add(message)
                 //make recycler view scroll to show the last text message
                 binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
                 adapter.notifyDataSetChanged()
-                Timber.i("The message are $messageThreadList")
+
             }
 
 
@@ -200,6 +209,7 @@ Timber.i("mate is ${chatMate.name}  current user is $currentUser")
         binding.sendButton.scaleY = 0.8f
 
     }
+
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
     }
@@ -207,8 +217,6 @@ Timber.i("mate is ${chatMate.name}  current user is $currentUser")
     override fun afterTextChanged(s: Editable?) {
 
     }
-
-
 
 
 }
