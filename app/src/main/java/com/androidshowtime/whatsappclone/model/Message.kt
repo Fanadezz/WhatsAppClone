@@ -9,4 +9,10 @@ data class Message(
     val messageString: String? = null,
     @ServerTimestamp
     val
-    timestamp: Date? = null)
+    timestamp: Date? = null){
+
+
+    override fun toString(): String {
+        return "Message[from: $from \n to: $to \n messageText: $messageString \n time: $timestamp"
+    }
+}
