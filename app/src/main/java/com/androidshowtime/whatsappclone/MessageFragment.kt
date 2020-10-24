@@ -50,8 +50,7 @@ class MessageFragment : Fragment(), TextWatcher {
         binding = FragmentMessageBinding.inflate(inflater)
         //initialize message thread list
         messageThreadList = mutableListOf()
-        //find messages
-        findChats()
+
 
         //set actionBar's title
         (activity as AppCompatActivity).supportActionBar?.title = user.name
@@ -59,7 +58,8 @@ class MessageFragment : Fragment(), TextWatcher {
 
         //instantiate the RecyclerViewAdapter and pass in the messages list
         adapter = RecyclerViewAdapter(messageThreadList)
-
+        //find messages
+        findChats()
         //set the RecyclerViewAdapter to the recyclerView
         binding.recyclerView.adapter = adapter
 
@@ -131,8 +131,11 @@ class MessageFragment : Fragment(), TextWatcher {
         val to = user.name!!
         val messageString = readMessageBox()
 
+        val message = Message(from, to, messageString, Date())
+        Timber.i("Messsage created by $from : $message ")
 
-        return Message(from, to, messageString, Date())
+        return message
+
     }
 
 
@@ -147,7 +150,6 @@ class MessageFragment : Fragment(), TextWatcher {
 
 
             Snackbar.make(binding.root, resources.getString(R.string.empty_message), Snackbar.LENGTH_SHORT).show()
-
 
 
         }
@@ -167,34 +169,68 @@ class MessageFragment : Fragment(), TextWatcher {
     private fun findChats() {
         val currentUser = auth.currentUser?.displayName!!
         val chatMate = args.user
-        val msgRef = firestore.collection("Messages")
         Timber.i("The guy is: $chatMate")
-        msgRef.whereEqualTo("from", chatMate.name)
-              /*  .whereEqualTo("from", currentUser)
+        val msgRef1 = firestore.collection("Messages")
+
+        msgRef1.whereEqualTo("from", chatMate.name)
+                .whereEqualTo("to", currentUser)
+
+
+
+
+
+              //  .orderBy("timestamp", Query.Direction.ASCENDING)
+                .get()
+                .addOnSuccessListener {
+
+                    querySnapshot ->
+                    for (doc in querySnapshot) {
+                        //  .orderBy("timestamp")
+
+                        val message = doc.toObject(Message::class.java)
+                        messageThreadList.add(message)
+                       // messageThreadList.sortedBy { it.timestamp?.time }
+                        //make recycler view scroll to show the last text message
+                       // binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
+
+                    }
+                   // adapter.notifyDataSetChanged()
+
+                }
+                .addOnFailureListener {
+
+                    Timber.i("Error on msgRef1 - $it")
+                }
+
+
+        val msgRef2 = firestore.collection("Messages")
+
+        msgRef2.whereEqualTo("from", currentUser)
                 .whereEqualTo("to", chatMate.name)
-                .whereEqualTo("to", currentUser)*/
+                //.orderBy("timestamp", Query.Direction.ASCENDING)
+                .get()
+                .addOnSuccessListener {
+                    querySnapshot ->
+
+                    for (doc in querySnapshot){
+
+                        val message = doc.toObject(Message::class.java)
+                        messageThreadList.add(message)
+                       // adapter.notifyDataSetChanged()
+                    }
 
 
-       // msgRef.orderBy("t0", Query.Direction.DESCENDING).limit(5)
-        .get().addOnSuccessListener {
 
-            querySnapshot ->
-            for (doc in querySnapshot) {
-                //  .orderBy("timestamp")
+                    //make recycler view scroll to show the last text message
+                    binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
+                  //  messageThreadList.sortedBy { it.timestamp }
 
-                val message = doc.toObject(Message::class.java)
-                messageThreadList.add(message)
-                //make recycler view scroll to show the last text message
-                binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
-                adapter.notifyDataSetChanged()
-
-            }
+                    sortMessagesByDate(messageThreadList)
+                    adapter.notifyDataSetChanged()
+                }
+                .addOnFailureListener { Timber.i("Error on msgRef2 - $it") }
 
 
-        }.addOnFailureListener {
-
-            Timber.i("Error - $it")
-        }
 
 
     }
@@ -213,6 +249,13 @@ class MessageFragment : Fragment(), TextWatcher {
 
     override fun afterTextChanged(s: Editable?) {
 
+    }
+
+
+    //sort method
+
+    fun sortMessagesByDate(messages: MutableList<Message>) {
+        messages.sortWith(compareBy { it.timestamp })
     }
 
 
