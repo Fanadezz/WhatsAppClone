@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.androidshowtime.whatsappclone.databinding.FragmentLoginBinding
@@ -48,21 +49,19 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
 
         //create binding
         binding = FragmentLoginBinding.inflate(inflater)
-
+        (activity as AppCompatActivity).actionBar?.title = "Welcome"
 
         //login Button implementation
 
         binding.loginButton.setOnClickListener {
 
-            Timber.i("button clicked")
+
             //check whether a user is already signed in from a previous session
             if (auth.currentUser != null) {
                 //already signed in
 
-                //get phone number
 
-                // val phoneNumber = auth.currentUser?.phoneNumber
-                // navigate to second activity/fragment
+                // navigate to ChatFragment
                 findNavController().navigate(
                         LoginFragmentDirections.actionLoginFragmentToProfileFragment(phoneNumber)
                                             )
@@ -96,28 +95,7 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
             }
 
 
-            /* val whitelistedCountries = mutableListOf<String>()
-                whitelistedCountries.add("+254")
-
-
-
-                val phoneConfigWithWhitelistedCountries = PhoneBuilder()
-                        .setWhitelistedCountries(whitelistedCountries)
-                        .build()
-
-
-                //val providers = arrayListOf(AuthUI.IdpConfig.PhoneBuilder().build())
-                val providers = arrayListOf(phoneConfigWithWhitelistedCountries)
-*/
-
-            /* .setAvailableProviders(providers)
-                                    .setIsSmartLockEnabled(true)
-                                    .setTosAndPrivacyPolicyUrls("https://example.com", "https://example.com")
-                                    .setAlwaysShowSignInMethodScreen(true)*/
-
-
         }
-
 
         return binding.root
     }
@@ -172,7 +150,7 @@ class LoginFragment : Fragment(), FirebaseAuth.AuthStateListener, FirebaseAuth.I
         }
 
 
-        //If user is not signed in then start sign-in process here
+
 
 
     }
