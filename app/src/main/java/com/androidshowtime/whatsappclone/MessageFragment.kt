@@ -18,7 +18,6 @@ import com.androidshowtime.whatsappclone.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import timber.log.Timber
 import java.util.*
 
@@ -34,11 +33,10 @@ class MessageFragment : Fragment(), TextWatcher {
     private lateinit var binding: FragmentMessageBinding
     private lateinit var messageThreadList: MutableList<Message>
     private lateinit var adapter: RecyclerViewAdapter
-    private var sendMessage = false
 
 
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //retrieve user from Nav Args
         user = args.user
@@ -46,8 +44,10 @@ class MessageFragment : Fragment(), TextWatcher {
         //initialize auth and firestore
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
+
         //initialize binding
         binding = FragmentMessageBinding.inflate(inflater)
+
         //initialize message thread list
         messageThreadList = mutableListOf()
 
@@ -72,8 +72,10 @@ class MessageFragment : Fragment(), TextWatcher {
                 //check if it is the Enter-Key, Check if Enter Key was pressed down
                 ((keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_DOWN)) -> {
 
-                    //perform an action here e.g. a send message button click
+                    //trigger sendButtonClick Programatically
                     binding.sendButton.performClick()
+
+                    //Focus on Edittext
                     binding.msgBoxEdittext.requestFocus()
 
                     return@setOnKeyListener true
@@ -98,7 +100,7 @@ class MessageFragment : Fragment(), TextWatcher {
         binding.msgBoxEdittext.addTextChangedListener(this)
         //send button implementation
         binding.sendButton.setOnClickListener {
-
+            //sending the message
             sendMessage()
 
             //make recycler view scroll to show the bottommost text
@@ -110,29 +112,28 @@ class MessageFragment : Fragment(), TextWatcher {
 
         }
 
-
+        //return the View Object
         return binding.root
     }
 
-    //read Edittext value
+    //Read from the Chat Box
     private fun readMessageBox(): String {
 
-
+        //read Edittext value
         return binding.msgBoxEdittext.text.toString()
     }
 
 
     //create message
-
     private fun createMessage(): Message {
 
-
+        //create Message Object passing in the current user, active chat and the message
         val from = auth.currentUser?.displayName!!
         val to = user.name!!
         val messageString = readMessageBox()
 
         val message = Message(from, to, messageString, Date())
-        Timber.i("Messsage created by $from : $message ")
+
 
         return message
 
@@ -142,10 +143,9 @@ class MessageFragment : Fragment(), TextWatcher {
     private fun sendMessage() {
 
         val message = createMessage()
+
         //check if the message is empty
         val messageString = message.messageString
-
-
         if (messageString == "") {
 
 
@@ -172,89 +172,67 @@ class MessageFragment : Fragment(), TextWatcher {
         Timber.i("The guy is: $chatMate")
         val msgRef1 = firestore.collection("Messages")
 
-        msgRef1.whereEqualTo("from", chatMate.name)
-                .whereEqualTo("to", currentUser)
+        msgRef1.whereEqualTo("from", chatMate.name).whereEqualTo("to", currentUser)
 
+                .get().addOnSuccessListener { querySnapshot ->
 
-
-
-
-              //  .orderBy("timestamp", Query.Direction.ASCENDING)
-                .get()
-                .addOnSuccessListener {
-
-                    querySnapshot ->
+                    //iterate to find massages documents from cloud firestore
                     for (doc in querySnapshot) {
-                        //  .orderBy("timestamp")
-
+                        //convert the document to a Message Custom Object
                         val message = doc.toObject(Message::class.java)
                         messageThreadList.add(message)
-                       // messageThreadList.sortedBy { it.timestamp?.time }
-                        //make recycler view scroll to show the last text message
-                       // binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
+
 
                     }
-                   // adapter.notifyDataSetChanged()
+                    // adapter.notifyDataSetChanged()
 
-                }
-                .addOnFailureListener {
-
-                    Timber.i("Error on msgRef1 - $it")
-                }
+                }.addOnFailureListener { Timber.i("Error on msgRef1 - $it") }
 
 
         val msgRef2 = firestore.collection("Messages")
 
-        msgRef2.whereEqualTo("from", currentUser)
-                .whereEqualTo("to", chatMate.name)
+        msgRef2.whereEqualTo("from", currentUser).whereEqualTo("to", chatMate.name)
                 //.orderBy("timestamp", Query.Direction.ASCENDING)
-                .get()
-                .addOnSuccessListener {
-                    querySnapshot ->
+                .get().addOnSuccessListener { querySnapshot ->
+                    //iterate to find massages documents from cloud firestore
+                    for (doc in querySnapshot) {
 
-                    for (doc in querySnapshot){
-
+                        //convert the document to a Message Custom Object
                         val message = doc.toObject(Message::class.java)
                         messageThreadList.add(message)
-                       // adapter.notifyDataSetChanged()
-                    }
 
+                    }
 
 
                     //make recycler view scroll to show the last text message
                     binding.recyclerView.scrollToPosition(messageThreadList.size - 1)
-                  //  messageThreadList.sortedBy { it.timestamp }
 
+
+                    //sort messages by date
                     sortMessagesByDate(messageThreadList)
                     adapter.notifyDataSetChanged()
-                }
-                .addOnFailureListener { Timber.i("Error on msgRef2 - $it") }
-
-
+                }.addOnFailureListener { Timber.i("Error on msgRef2 - $it") }
 
 
     }
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        //change button color when text is added
+        //change button color when text is added to signify message is ready for sending
         binding.sendButton.background = Color.CYAN.toDrawable()
         binding.sendButton.scaleX = 0.8f
         binding.sendButton.scaleY = 0.8f
 
     }
 
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-    }
-
-    override fun afterTextChanged(s: Editable?) {
-
-    }
+    override fun afterTextChanged(s: Editable?) {}
 
 
-    //sort method
+    //sort method - takes a list to be sorted
+    private fun sortMessagesByDate(messages: MutableList<Message>) {
 
-    fun sortMessagesByDate(messages: MutableList<Message>) {
+        //sort messages by Date
         messages.sortWith(compareBy { it.timestamp })
     }
 

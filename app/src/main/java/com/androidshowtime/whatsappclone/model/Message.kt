@@ -7,6 +7,8 @@ import com.google.firebase.firestore.ServerTimestamp
 
 import java.util.*
 
+
+
 data class Message(
         val from: String? = null,
         val to: String? = null,
@@ -14,7 +16,9 @@ data class Message(
         @ServerTimestamp
         val timestamp: Date? = null) {
 
+
+
     override fun toString(): String {
-        return "Message[\n from: $from \n to: $to \n messageText: $messageString \n time: $timestamp]"
-    }
+    return "Message[\n from: $from \n to: $to \n messageText: $messageString \n time: $timestamp]"
+}
 }
