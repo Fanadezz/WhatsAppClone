@@ -33,7 +33,7 @@
             android:id="@+id/msg_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/msg_body_bg"
+            android:background="@drawable/msg_body_bg_out"
             android:padding="@dimen/msg_padding"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             app:layout_constraintBottom_toBottomOf="parent"
