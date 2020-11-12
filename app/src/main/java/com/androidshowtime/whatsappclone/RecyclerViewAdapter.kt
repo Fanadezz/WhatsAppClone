@@ -99,6 +99,8 @@ class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
             val inComingBinding: IncomingMsgLayoutBinding = DataBindingUtil.inflate(inflater,R.layout.incoming_msg_layout,parent,false)
             return InComingViewHolder(inComingBinding)
         } else{
+
+
             val outBinding: OutgoingMsgLayoutBinding = DataBindingUtil.inflate(inflater,R.layout.outgoing_msg_layout,parent,false)
             return OutComingViewHolder(outBinding)
         }
@@ -119,7 +121,7 @@ class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
     }
 
 
-    fun previousMsg(position: Int):String?{
+    private fun previousMsg(position: Int):String?{
         val prevPos = position - 1
         val msg = messageDataSet[ if(prevPos < 0) 0 else prevPos]
        return msg.from

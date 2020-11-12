@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -10,18 +11,19 @@
             type="com.androidshowtime.whatsappclone.model.Message" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/msg_padding">
 
         <TextView
-            android:text="@{msg.from}"
             android:id="@+id/msg_from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:paddingStart="@dimen/msg_padding"
+            android:paddingEnd="@dimen/msg_padding"
+            android:text="@{msg.from}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/msg_body"
@@ -29,15 +31,17 @@
             tools:text="User" />
 
         <TextView
-            android:text="@{msg.messageString}"
             android:id="@+id/msg_body"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/msg_body_bg_out"
+            android:background="@drawable/msg_body_bg_in"
+            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:fontFamily="@font/nunito"
             android:padding="@dimen/msg_padding"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:text="@{msg.messageString}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="ndnffn kfnd ldfml ldfm" />
+            tools:text="Lovely and Sweet Dreams" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
