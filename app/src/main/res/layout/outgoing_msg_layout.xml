@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="msg"
+            type="com.androidshowtime.whatsappclone.model.Message" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/msg_padding">
+
+        <TextView
+            android:text="@{msg.from}"
+            android:id="@+id/msg_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:paddingEnd="@dimen/msg_padding"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/msg_body"
+            app:layout_constraintEnd_toEndOf="@id/msg_body"
+            tools:text="User" />
+
+        <TextView
+            android:text="@{msg.messageString}"
+            android:id="@+id/msg_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/msg_body_bg"
+            android:padding="@dimen/msg_padding"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="ndnffn kfnd ldfml ldfm" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

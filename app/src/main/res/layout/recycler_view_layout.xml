@@ -15,7 +15,7 @@
         android:textColor="@color/quantum_lightgreenA700"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Thirteen" />
+        tools:text="sender'sName" />
 
     <TextView
         android:id="@+id/timeStampTextView"
@@ -40,5 +40,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fromTextView"
-        tools:text="Hello Sir, How is the Going" />
+        tools:text="Message String goes here" />
 </androidx.constraintlayout.widget.ConstraintLayout>
