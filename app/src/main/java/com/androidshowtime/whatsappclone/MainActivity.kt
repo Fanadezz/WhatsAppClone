@@ -1,10 +1,10 @@
 package com.androidshowtime.whatsappclone
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.fragment_chat.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -13,7 +13,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Timber.plant(Timber.DebugTree())
 
+        val navController = findNavController(R.id.nav_host_fragment)
+        NavigationUI.setupActionBarWithNavController(this, navController)
+    }
 
+    override fun onSupportNavigateUp(): Boolean {
 
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp()
     }
 }
