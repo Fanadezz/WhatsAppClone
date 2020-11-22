@@ -10,6 +10,7 @@ import com.androidshowtime.whatsappclone.databinding.FragmentChatBinding
 import com.androidshowtime.whatsappclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 
 class ChatFragment : Fragment() {
@@ -30,7 +31,7 @@ class ChatFragment : Fragment() {
         savedInstanceState: Bundle?
                              ): View? {
 
-        val view = inflater.inflate(R.layout.recycler_view_layout,container,false)
+        //val view = inflater.inflate(R.layout.recycler_view_layout,container,false)
         val binding = FragmentChatBinding.inflate(inflater)
 
         //show menu

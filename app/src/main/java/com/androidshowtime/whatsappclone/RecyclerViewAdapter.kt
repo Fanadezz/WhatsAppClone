@@ -2,6 +2,8 @@ package com.androidshowtime.whatsappclone
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
@@ -10,6 +12,10 @@ import com.androidshowtime.whatsappclone.databinding.IncomingMsgLayoutBinding
 import com.androidshowtime.whatsappclone.databinding.OutgoingMsgLayoutBinding
 import com.androidshowtime.whatsappclone.model.Message
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,7 +23,7 @@ import java.util.*
 
 /*Add RecyclerViewAdapter class responsible for displaying message items. The Adapter
 Class extends RecyclerView.Adapter and we pass in a ViewHolder Class*/
-class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
+class RecyclerViewAdapter(private val chatMessageThread: MutableList<Message>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
@@ -62,7 +68,7 @@ class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
     override fun getItemCount(): Int {
 
         Timber.i("inside onCreateViewHolder")
-        return messageDataSet.size
+        return chatMessageThread.size
     }
 
     //inner class for holding views which takes a View item in its constructor
@@ -87,7 +93,10 @@ class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
 
 
     override fun getItemViewType(position: Int): Int {
-        val user = messageDataSet[position].from!!
+        val user = chatMessageThread[position].from!!
+
+        //0 - sender == currentUser -> message is outGoing
+        //1 - sender != currentUser -> message is inComing
         return if (FirebaseAuth.getInstance().currentUser?.displayName == user) 0 else 1
     }
 
@@ -109,27 +118,37 @@ class RecyclerViewAdapter(private val messageDataSet: MutableList<Message>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val viewType = getItemViewType(position)
-        val msg = messageDataSet[position]
-        if (viewType == 1) {
-            (holder as InComingViewHolder).itemBinding.msg = msg
-            holder.itemBinding.msgFrom.visibility =
-                if (msg.from == getTheRecentSender(position)) View.GONE else View.VISIBLE
-        } else {
 
-            (holder as OutGoingViewHolder).itemBinding.msg = msg
+        val viewType = getItemViewType(position)
+        val chat = chatMessageThread[position]
+
+        //for incoming chat
+        if (viewType == 1) {
+            (holder as InComingViewHolder).itemBinding.msg = chat
+
+            //hide sender's name if previous chat came from the same sender
             holder.itemBinding.msgFrom.visibility =
-                if (msg.from == getTheRecentSender(position)) View.GONE else View.VISIBLE
+                if (chat.from == getTheRecentSender(position)) GONE else VISIBLE
+        }
+        //for outgoing chat
+        else {
+            (holder as OutGoingViewHolder).itemBinding.msg = chat
+
+            //hide sender's name if previous chat came from the same sender
+            holder.itemBinding.msgFrom.visibility =
+                if (chat.from == getTheRecentSender(position)) GONE else VISIBLE
         }
     }
 
 
     private fun getTheRecentSender(position: Int): String? {
-        val lastMessagePosition = position - 1
-        //return the 1st message if messages chat thread is empty
-        val msg = messageDataSet[if (lastMessagePosition < 0) 0 else lastMessagePosition]
-        //get and return the sender of the last message
-        return msg.from
+
+
+        val previousMsg = position - 1
+        //return message at index 0 if lastMessagePosition is negative
+        val chat = chatMessageThread[if (previousMsg < 0) 0 else previousMsg]
+        //get and return the sender's name of the last message
+        return chat.from
     }
 
 }

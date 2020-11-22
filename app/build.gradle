@@ -29,7 +29,7 @@ android {
 
      buildFeatures {
              //for data binding - default is false
-             dataBinding = true
+             dataBinding true
 
              //for vieBinding - default is true
              viewBinding = true
