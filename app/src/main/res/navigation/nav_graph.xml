@@ -14,10 +14,10 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/action_loginFragment_to_chatFragment"
-            app:destination="@id/log_out" />
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
-        android:id="@+id/log_out"
+        android:id="@+id/chatFragment"
         android:name="com.androidshowtime.whatsappclone.ChatFragment"
         android:label="ChatFragment" >
         <action
@@ -34,7 +34,7 @@
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profileFragment_to_chatFragment"
-            app:destination="@id/log_out" />
+            app:destination="@id/chatFragment" />
         <argument
             android:name="phoneNumber"
             app:argType="string" />
