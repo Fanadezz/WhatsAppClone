@@ -17,5 +17,6 @@
     <string name="outgoing_msg">=> %s</string>
     <string name="empty_message"> Cannot send an empty message</string>
     <string name="back_to_chats">Back to Chats</string>
+    <string name="messages_title">Messages</string>
 
 </resources>

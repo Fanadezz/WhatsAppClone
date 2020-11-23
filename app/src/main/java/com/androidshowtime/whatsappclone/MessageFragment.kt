@@ -4,14 +4,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.NavigationUI
 import com.androidshowtime.whatsappclone.databinding.FragmentMessageBinding
 import com.androidshowtime.whatsappclone.model.Message
 import com.androidshowtime.whatsappclone.model.User
@@ -112,6 +112,9 @@ class MessageFragment : Fragment(), TextWatcher {
 
         }
 
+
+        //menu = true
+        setHasOptionsMenu(true)
         //return the View Object
         return binding.root
     }
@@ -236,5 +239,15 @@ class MessageFragment : Fragment(), TextWatcher {
         messages.sortWith(compareBy { it.timestamp })
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.msg_overflow, menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(item,findNavController())
+    }
 
 }
