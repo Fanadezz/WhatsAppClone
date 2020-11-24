@@ -19,7 +19,7 @@ class ChatFragment : Fragment() {
     private lateinit var auth:FirebaseAuth
 
 
-
+//I have two lists - one for names and another for users
     private lateinit var contactsList: MutableList<User>
     private lateinit var contactsNames: MutableList<String>
     private lateinit var adapter: ArrayAdapter<String>
@@ -40,7 +40,7 @@ class ChatFragment : Fragment() {
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-
+//set actionBar's title
         (activity as AppCompatActivity).supportActionBar?.title = "Chats"
         //initialize lists
         contactsList = mutableListOf()
@@ -89,6 +89,8 @@ class ChatFragment : Fragment() {
 
 
     }
+
+    // method for obtaining contacts and adding them to the lists
 
     private fun getAllContacts() {
         val currentUserPhoneCredential = auth.currentUser?.phoneNumber!!

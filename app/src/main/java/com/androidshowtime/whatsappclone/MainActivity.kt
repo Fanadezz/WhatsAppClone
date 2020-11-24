@@ -23,6 +23,24 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController, drawer)
         NavigationUI.setupWithNavController(navView, navController)
+
+
+        // // prevent nav gesture if not on start destination
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+
+
+            if (destination.id == controller.graph.startDestination ){
+
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+
+            }
+
+            else{
+
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
