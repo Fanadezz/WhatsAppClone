@@ -55,9 +55,13 @@ class ChatFragment : Fragment() {
         //populate listView
         binding.listView.adapter = adapter
 
-        //implement list onClick
+        //implement listView onClick
         binding.listView.setOnItemClickListener { _, _, i, _ ->
 
+
+           /*when a name is clicked on the ListView at a specific position the app navigates
+            to the DisplayMessage Fragment taking a UserObject corresponding to the
+             clicked contact.*/
             findNavController().navigate(ChatFragmentDirections
                                              .actionChatFragmentToMessageFragment(contactsList[i]))
 
@@ -90,8 +94,8 @@ class ChatFragment : Fragment() {
 
     }
 
-    // method for obtaining contacts and adding them to the lists
 
+    // method for obtaining contacts and adding them to the lists
     private fun getAllContacts() {
         val currentUserPhoneCredential = auth.currentUser?.phoneNumber!!
 
@@ -101,7 +105,7 @@ class ChatFragment : Fragment() {
             for (doc in querySnapshot) {
 
                 val user = doc.toObject(User::class.java)
-
+     //I have 2 lists one with just the names and another with the User Object
                 contactsList.add(user)
                 contactsNames.add(user.name!!)
 
